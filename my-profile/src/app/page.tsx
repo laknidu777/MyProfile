@@ -253,11 +253,11 @@ export default function Home() {
           
           <HeroOverlay />
           <AboutSection />
-          <ResearchSection />
-          <GamesSection />
+          {/* <ResearchSection />
+          <GamesSection /> */}
           <FreelanceSection />
           <ProjectsSection />
-          <ExperienceSection />
+          <ExperienceSection /> 
           <SkillsSection />
           <ContactSection />
           <Footer />

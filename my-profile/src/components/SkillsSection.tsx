@@ -46,7 +46,7 @@ export default function SkillsSection() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: idx * 0.1 }}
-            className="p-6 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] transition-colors"
+            className="p-6 rounded-2xl bg-[#050505]/50 backdrop-blur-md border border-white/5 hover:bg-[#050505]/70 transition-colors"
           >
             <div className="flex items-center space-x-4 mb-6">
               <div className="p-3 bg-white/5 rounded-lg">

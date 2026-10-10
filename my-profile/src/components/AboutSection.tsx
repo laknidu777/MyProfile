@@ -24,13 +24,13 @@ export default function AboutSection() {
           </p>
           
           <div className="pt-4 flex flex-wrap gap-4">
-            <div className="px-4 py-2 bg-white/5 rounded-lg border border-white/10 text-sm font-medium text-indigo-300">
+            <div className="px-4 py-2 bg-[#050505]/50 backdrop-blur-md rounded-lg border border-white/10 text-sm font-medium text-indigo-300">
               Web Architecture
             </div>
-            <div className="px-4 py-2 bg-white/5 rounded-lg border border-white/10 text-sm font-medium text-purple-300">
+            <div className="px-4 py-2 bg-[#050505]/50 backdrop-blur-md rounded-lg border border-white/10 text-sm font-medium text-purple-300">
               Interactive Design
             </div>
-            <div className="px-4 py-2 bg-white/5 rounded-lg border border-white/10 text-sm font-medium text-pink-300">
+            <div className="px-4 py-2 bg-[#050505]/50 backdrop-blur-md rounded-lg border border-white/10 text-sm font-medium text-pink-300">
               Performance Optimization
             </div>
           </div>
@@ -46,7 +46,7 @@ export default function AboutSection() {
           {/* Decorative Elements */}
           <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 rounded-2xl transform rotate-3 scale-105 blur-xl"></div>
           
-          <div className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl p-8 aspect-square flex flex-col items-center justify-center overflow-hidden">
+          <div className="relative bg-[#050505]/50 backdrop-blur-md border border-white/10 rounded-2xl p-8 aspect-square flex flex-col items-center justify-center overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
             
             {/* Abstract visual representing tech stack */}

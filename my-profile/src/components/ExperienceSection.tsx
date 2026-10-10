@@ -57,7 +57,7 @@ export default function ExperienceSection() {
               <div className="hidden md:block md:w-5/12"></div>
               
               {/* Content Card */}
-              <div className="md:w-5/12 bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-indigo-500/30 hover:bg-white/10 transition-all duration-300">
+              <div className="md:w-5/12 bg-[#050505]/50 backdrop-blur-md border border-white/10 rounded-2xl p-6 hover:border-indigo-500/30 hover:bg-[#050505]/70 transition-all duration-300">
                 <h3 className="text-xl font-bold text-white mb-1">{exp.role}</h3>
                 
                 <div className="flex flex-wrap items-center text-sm font-medium text-indigo-400 mb-4 gap-x-4 gap-y-2">

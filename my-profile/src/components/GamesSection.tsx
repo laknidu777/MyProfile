@@ -34,7 +34,7 @@ export default function GamesSection() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: idx * 0.1 }}
-            className="group rounded-2xl overflow-hidden bg-white/5 border border-white/10"
+            className="group rounded-2xl overflow-hidden bg-[#050505]/50 backdrop-blur-md border border-white/10 hover:bg-[#050505]/70 transition-all duration-300"
           >
             <div className="relative h-64 overflow-hidden">
               <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors z-10"></div>

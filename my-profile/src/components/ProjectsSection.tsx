@@ -44,7 +44,7 @@ export default function ProjectsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: idx * 0.1 }}
-            className={`group relative rounded-2xl bg-white/5 border border-white/10 overflow-hidden hover:border-indigo-500/50 transition-all duration-300 ${project.featured ? 'md:col-span-2 lg:col-span-1' : ''}`}
+            className={`group relative rounded-2xl bg-[#050505]/50 backdrop-blur-md border border-white/10 overflow-hidden hover:border-indigo-500/50 hover:bg-[#050505]/70 transition-all duration-300 ${project.featured ? 'md:col-span-2 lg:col-span-1' : ''}`}
           >
             <div className="p-8 h-full flex flex-col">
               <div className="flex justify-between items-start mb-6">

@@ -34,7 +34,7 @@ export default function FreelanceSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: idx * 0.1 }}
-            className="group relative bg-white/[0.02] border border-white/5 rounded-3xl p-8 hover:bg-white/[0.04] hover:border-white/10 transition-all overflow-hidden"
+            className="group relative bg-[#050505]/50 backdrop-blur-md border border-white/5 rounded-3xl p-8 hover:bg-[#050505]/70 hover:border-white/10 transition-all overflow-hidden"
           >
             {/* Background decorative gradient */}
             <div className="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl group-hover:bg-indigo-500/20 transition-colors pointer-events-none"></div>
