@@ -1,0 +1,38 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build and output artifacts
+.next
+out
+build
+coverage
+
+# Debug and runtime logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Git repository metadata
+.git
+.gitignore
+.gitattributes
+
+# Environment files (inject via docker environment or docker compose)
+.env*.local
+
+# IDE and development configurations
+.agents
+.gemini
+.idea
+.vscode
+*.tsbuildinfo
+*.pem
+.DS_Store
+
+# Docker files
+Dockerfile*
+docker-compose*.yml
+.dockerignore

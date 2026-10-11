@@ -1,0 +1,29 @@
+# Dependencies
+**/node_modules
+
+# Next.js build output
+**/.next
+**/out
+**/build
+**/coverage
+
+# Logs
+**/*-debug.log*
+
+# Git and OS metadata
+.git
+.gitignore
+.gitattributes
+.DS_Store
+
+# IDE and tooling
+.agents
+.gemini
+.idea
+.vscode
+**/*.tsbuildinfo
+
+# Docker files
+Dockerfile*
+docker-compose*.yml
+.dockerignore

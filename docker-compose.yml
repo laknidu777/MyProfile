@@ -1,0 +1,35 @@
+services:
+  # Optimized production container
+  my-profile:
+    build:
+      context: ./my-profile
+      dockerfile: Dockerfile
+      target: runner
+    container_name: my-profile-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+
+  # Containerized development environment with hot reloading
+  my-profile-dev:
+    build:
+      context: ./my-profile
+      dockerfile: Dockerfile
+      target: dev
+    container_name: my-profile-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./my-profile:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    profiles:
+      - dev
