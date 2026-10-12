@@ -13,7 +13,7 @@ import SkillsSection from "../components/SkillsSection";
 import ContactSection from "../components/ContactSection";
 import Footer from "../components/Footer";
 
-type IntroState = "loading" | "playing_forward" | "showing_text" | "done";
+type IntroState = "loading" | "showing_text" | "done";
 
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -27,7 +27,6 @@ export default function Home() {
   
   // Total number of frames in the directory
   const frameCount = 300;
-  const rafIdRef = useRef<number | null>(null);
 
   // Preload images
   useEffect(() => {
@@ -37,9 +36,9 @@ export default function Home() {
     for (let i = 1; i <= frameCount; i++) {
       const img = new Image();
       const paddedIndex = i.toString().padStart(3, "0");
-      img.src = `/ezgif-6916cc84d1500b24-jpg/ezgif-frame-${paddedIndex}.jpg`;
+      img.src = `/ezgif-6916cc84d1500b24-jpg/ezgif-frame-${paddedIndex}.png`;
       
-      img.onload = () => {
+      const onImageLoaded = () => {
         loadedCount++;
         setLoadProgress(Math.floor((loadedCount / frameCount) * 100));
         
@@ -48,6 +47,9 @@ export default function Home() {
           setIsLoaded(true);
         }
       };
+
+      img.onload = onImageLoaded;
+      img.onerror = onImageLoaded;
       
       loadedImages.push(img);
     }
@@ -67,93 +69,29 @@ export default function Home() {
     }
   };
 
-  // 1a. Transition state when loaded
+  // 1. Transition state when loaded and show intro text
   useEffect(() => {
     if (isLoaded && introState === "loading") {
-      setIntroState("playing_forward");
-    }
-  }, [isLoaded, introState]);
-
-  // 1b. Play slower forward animation
-  useEffect(() => {
-    if (introState === "playing_forward") {
-      let frame = 0;
-      let lastTime = performance.now();
-      const fps = 60;
-      const frameInterval = 1000 / fps;
-      
-      const frameStep = 1; 
-
-      const playIntro = (time: number) => {
-        if (time - lastTime >= frameInterval) {
-          frame += frameStep;
-          
-          if (frame >= frameCount - 1) {
-            frame = frameCount - 1;
-            drawFrame(frame);
-            // Stop at arms crossed, transition to text
-            setIntroState("showing_text");
-            return; 
-          }
-          
-          drawFrame(frame);
-          lastTime = time;
-        }
-        
-        rafIdRef.current = requestAnimationFrame(playIntro);
-      };
-      
       drawFrame(0);
-      
-      const timeoutId = setTimeout(() => {
-        rafIdRef.current = requestAnimationFrame(playIntro);
-      }, 500);
-      
-      return () => {
-        clearTimeout(timeoutId);
-        if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
-      };
+      setIntroState("showing_text");
     }
-  }, [introState, images]);
+  }, [isLoaded, introState, images]);
 
-  // 2. Handle Background Reset while showing text
+  // 2. Show "Hi I'm Laknidu" intro text and then transition to done
   useEffect(() => {
     if (introState === "showing_text") {
-      
-      // Quietly reverse the canvas back to frame 0
-      let frame = frameCount - 1;
-      let lastTime = performance.now();
-      const fps = 60;
-      
-      const backwardStep = 2;
+      drawFrame(0);
 
-      const resetCanvas = (time: number) => {
-        if (time - lastTime >= 1000 / fps) {
-          frame -= backwardStep;
-          if (frame <= 0) {
-            frame = 0;
-            drawFrame(frame);
-            return;
-          }
-          drawFrame(frame);
-          lastTime = time;
-        }
-        rafIdRef.current = requestAnimationFrame(resetCanvas);
-      };
-      
-      rafIdRef.current = requestAnimationFrame(resetCanvas);
-      
-      // Unlock scroll after a few seconds
+      // Transition to done after the text introduction
       const timer = setTimeout(() => {
         setIntroState("done");
-      }, 3500);
+      }, 3000);
       
       return () => {
         clearTimeout(timer);
-        if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current);
       };
     }
-  }, [introState]);
+  }, [introState, images]);
 
   // 3. Handle normal scroll animation after intro is done
   useEffect(() => {

@@ -62,7 +62,6 @@ export default function HeroOverlay() {
               <span>Let's Talk</span>
             </a>
           </div>
-          
           {/* Socials */}
           <div className="flex items-center justify-center gap-6">
             <a href="#" className="text-gray-400 hover:text-white hover:scale-110 transition-all">
