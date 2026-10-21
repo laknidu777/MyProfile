@@ -68,9 +68,9 @@ export type ProfileSettingsInput = z.infer<typeof profileSettingsSchema>;
 
 export const contactSettingsSchema = z.object({
   contact_email: z.string().email("Valid email required"),
-  contact_github: z.string().url("Valid URL required").optional().or(z.literal("")),
-  contact_linkedin: z.string().url("Valid URL required").optional().or(z.literal("")),
-  contact_twitter: z.string().url("Valid URL required").optional().or(z.literal("")),
+  contact_github: z.string().url("Must be a full URL starting with https://").optional().or(z.literal("")),
+  contact_linkedin: z.string().url("Must be a full URL starting with https://").optional().or(z.literal("")),
+  contact_twitter: z.string().url("Must be a full URL starting with https://").optional().or(z.literal("")),
   contact_title: z.string().max(120).optional().or(z.literal("")),
   contact_description: z.string().max(500).optional().or(z.literal("")),
 });

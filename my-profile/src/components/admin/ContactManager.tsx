@@ -27,11 +27,37 @@ export default function ContactManager({ initialSettings }: ContactManagerProps)
   const [notice, setNotice] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [isPending, startTransition] = useTransition();
 
+  // Auto-prepend https:// if the user types a bare domain like www.linkedin.com/...
+  const ensureHttps = (value: string): string => {
+    const trimmed = value.trim();
+    if (!trimmed) return trimmed;
+    if (!/^https?:\/\//i.test(trimmed)) {
+      return `https://${trimmed}`;
+    }
+    return trimmed;
+  };
+
+  const handleUrlBlur = (field: keyof ContactSettingsInput) => (e: React.FocusEvent<HTMLInputElement>) => {
+    const fixed = ensureHttps(e.target.value);
+    if (fixed !== e.target.value) {
+      setFormData((prev) => ({ ...prev, [field]: fixed }));
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setNotice(null);
 
-    const parsed = contactSettingsSchema.safeParse(formData);
+    // Auto-fix any URL fields before validating
+    const fixed: ContactSettingsInput = {
+      ...formData,
+      contact_github: ensureHttps(formData.contact_github || ""),
+      contact_linkedin: ensureHttps(formData.contact_linkedin || ""),
+      contact_twitter: ensureHttps(formData.contact_twitter || ""),
+    };
+    setFormData(fixed);
+
+    const parsed = contactSettingsSchema.safeParse(fixed);
     if (!parsed.success) {
       setNotice({
         type: "error",
@@ -41,7 +67,7 @@ export default function ContactManager({ initialSettings }: ContactManagerProps)
     }
 
     startTransition(async () => {
-      const res = await updateContactSettings(formData);
+      const res = await updateContactSettings(fixed);
       if (res.success) {
         setNotice({ type: "success", text: "Contact and social settings saved successfully!" });
         router.refresh();
@@ -134,12 +160,14 @@ export default function ContactManager({ initialSettings }: ContactManagerProps)
               GitHub Profile URL
             </label>
             <input
-              type="url"
+              type="text"
               value={formData.contact_github || ""}
               onChange={(e) => setFormData((prev) => ({ ...prev, contact_github: e.target.value }))}
+              onBlur={handleUrlBlur("contact_github")}
               placeholder="https://github.com/laknidu777"
               className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
             />
+            <p className="text-xs text-gray-500 mt-1">You can paste with or without https:// — it will be added automatically.</p>
           </div>
 
           <div>
@@ -147,14 +175,16 @@ export default function ContactManager({ initialSettings }: ContactManagerProps)
               LinkedIn Profile URL
             </label>
             <input
-              type="url"
+              type="text"
               value={formData.contact_linkedin || ""}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, contact_linkedin: e.target.value }))
               }
-              placeholder="https://linkedin.com/in/..."
+              onBlur={handleUrlBlur("contact_linkedin")}
+              placeholder="https://linkedin.com/in/laknidu-thilakawardhana"
               className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
             />
+            <p className="text-xs text-gray-500 mt-1">You can paste with or without https:// — it will be added automatically.</p>
           </div>
 
           <div>
@@ -162,14 +192,16 @@ export default function ContactManager({ initialSettings }: ContactManagerProps)
               Twitter / X Profile URL
             </label>
             <input
-              type="url"
+              type="text"
               value={formData.contact_twitter || ""}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, contact_twitter: e.target.value }))
               }
-              placeholder="https://twitter.com/..."
+              onBlur={handleUrlBlur("contact_twitter")}
+              placeholder="https://twitter.com/laknidu"
               className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl text-white text-sm focus:outline-none focus:border-indigo-500"
             />
+            <p className="text-xs text-gray-500 mt-1">You can paste with or without https:// — it will be added automatically.</p>
           </div>
         </div>
       </div>
