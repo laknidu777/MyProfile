@@ -1,5 +1,6 @@
+
 services:
-  # Optimized production container
+  # Production application
   my-profile:
     build:
       context: ./my-profile
@@ -10,11 +11,14 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
-      - PORT=3000
-      - HOSTNAME=0.0.0.0
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
+    depends_on:
+      postgres:
+        condition: service_healthy
 
-  # Containerized development environment with hot reloading
+  # Development application
   my-profile-dev:
     build:
       context: ./my-profile
@@ -28,8 +32,33 @@ services:
       - /app/node_modules
       - /app/.next
     environment:
-      - NODE_ENV=development
-      - PORT=3000
-      - HOSTNAME=0.0.0.0
+      NODE_ENV: development
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
+    depends_on:
+      postgres:
+        condition: service_healthy
     profiles:
       - dev
+
+  # PostgreSQL database
+  postgres:
+    image: postgres:17-alpine
+    container_name: my-profile-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: myprofile
+      POSTGRES_USER: profile_user
+      POSTGRES_PASSWORD: local_dev_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U profile_user -d myprofile"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:

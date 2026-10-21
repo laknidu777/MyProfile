@@ -2,43 +2,77 @@ import SectionLayout from "./SectionLayout";
 import { Briefcase, Calendar, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function ExperienceSection() {
-  const experiences = [
+export interface ExperienceDisplayItem {
+  position: string;
+  company: string;
+  employmentType?: string | null;
+  location?: string | null;
+  startDate: Date | string;
+  endDate?: Date | string | null;
+  current: boolean;
+  description: string;
+  technologies: string[];
+}
+
+interface ExperienceSectionProps {
+  experiences?: ExperienceDisplayItem[];
+}
+
+function formatDate(dateVal: Date | string) {
+  const d = new Date(dateVal);
+  return d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+}
+
+export default function ExperienceSection({ experiences: dynamicExperiences }: ExperienceSectionProps) {
+  const fallbackExperiences = [
     {
-      role: "Senior Software Engineer",
+      position: "Senior Software Engineer",
       company: "TechNova Solutions",
-      type: "Full-time",
+      employmentType: "Full-time",
       location: "San Francisco, CA (Remote)",
-      date: "Jan 2024 - Present",
-      description: "Leading the frontend architecture team for a suite of enterprise SaaS products. Implementing micro-frontends and optimizing rendering performance, resulting in a 40% decrease in load times.",
-      tech: ["React", "TypeScript", "Next.js", "GraphQL"]
+      startDate: new Date("2024-01-01"),
+      current: true,
+      description:
+        "Leading the frontend architecture team for a suite of enterprise SaaS products. Implementing micro-frontends and optimizing rendering performance, resulting in a 40% decrease in load times.",
+      technologies: ["React", "TypeScript", "Next.js", "GraphQL"],
     },
     {
-      role: "Full Stack Developer",
+      position: "Full Stack Developer",
       company: "Creative Digital Agency",
-      type: "Full-time",
+      employmentType: "Full-time",
       location: "New York, NY",
-      date: "Jun 2021 - Dec 2023",
-      description: "Developed and maintained interactive web applications for high-profile clients. Built custom CMS solutions, integrated complex third-party APIs, and mentored junior developers.",
-      tech: ["Vue.js", "Node.js", "PostgreSQL", "AWS"]
+      startDate: new Date("2021-06-01"),
+      endDate: new Date("2023-12-31"),
+      current: false,
+      description:
+        "Developed and maintained interactive web applications for high-profile clients. Built custom CMS solutions, integrated complex third-party APIs, and mentored junior developers.",
+      technologies: ["Vue.js", "Node.js", "PostgreSQL", "AWS"],
     },
     {
-      role: "Research Assistant",
+      position: "Research Assistant",
       company: "University Human-Computer Interaction Lab",
-      type: "Part-time",
+      employmentType: "Part-time",
       location: "Boston, MA",
-      date: "Sep 2019 - May 2021",
-      description: "Conducted research on novel interaction techniques for web-based collaborative tools. Co-authored two papers accepted at top-tier HCI conferences.",
-      tech: ["JavaScript", "Python", "WebSockets", "D3.js"]
-    }
+      startDate: new Date("2019-09-01"),
+      endDate: new Date("2021-05-31"),
+      current: false,
+      description:
+        "Conducted research on novel interaction techniques for web-based collaborative tools. Co-authored two papers accepted at top-tier HCI conferences.",
+      technologies: ["JavaScript", "Python", "WebSockets", "D3.js"],
+    },
   ];
+
+  const displayList =
+    dynamicExperiences && dynamicExperiences.length > 0
+      ? dynamicExperiences
+      : fallbackExperiences;
 
   return (
     <SectionLayout id="experience" title="Professional Experience">
       <div className="space-y-12 max-w-4xl mx-auto">
-        {experiences.map((exp, idx) => (
-          <motion.div 
-            key={exp.role + exp.company}
+        {displayList.map((exp, idx) => (
+          <motion.div
+            key={exp.position + exp.company}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -46,44 +80,65 @@ export default function ExperienceSection() {
             className="relative pl-8 md:pl-0"
           >
             {/* Timeline Line (Desktop only) */}
-            <div className="hidden md:block absolute left-[50%] top-0 bottom-[-3rem] w-px bg-gradient-to-b from-indigo-500/50 to-transparent -translate-x-1/2 last:bottom-0"></div>
-            
-            <div className={`md:flex items-center justify-between w-full ${idx % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
-              
+            <div className="hidden md:block absolute left-[50%] top-0 bottom-[-3rem] w-px bg-gradient-to-b from-indigo-500/50 to-transparent -translate-x-1/2 last:bottom-0" />
+
+            <div
+              className={`md:flex items-center justify-between w-full ${
+                idx % 2 === 0 ? "md:flex-row-reverse" : ""
+              }`}
+            >
               {/* Timeline Dot */}
-              <div className="absolute left-0 md:left-1/2 w-4 h-4 rounded-full bg-indigo-500 border-4 border-[#050505] -translate-x-[5px] md:-translate-x-1/2 mt-1.5 md:mt-0 z-10"></div>
-              
+              <div className="absolute left-0 md:left-1/2 w-4 h-4 rounded-full bg-indigo-500 border-4 border-[#050505] -translate-x-[5px] md:-translate-x-1/2 mt-1.5 md:mt-0 z-10" />
+
               {/* Empty space for alternating layout */}
-              <div className="hidden md:block md:w-5/12"></div>
-              
+              <div className="hidden md:block md:w-5/12" />
+
               {/* Content Card */}
               <div className="md:w-5/12 bg-[#050505]/50 backdrop-blur-md border border-white/10 rounded-2xl p-6 hover:border-indigo-500/30 hover:bg-[#050505]/70 transition-all duration-300">
-                <h3 className="text-xl font-bold text-white mb-1">{exp.role}</h3>
-                
+                <h3 className="text-xl font-bold text-white mb-1">{exp.position}</h3>
+
                 <div className="flex flex-wrap items-center text-sm font-medium text-indigo-400 mb-4 gap-x-4 gap-y-2">
-                  <span className="flex items-center"><Briefcase size={14} className="mr-1.5" /> {exp.company}</span>
-                  <span className="hidden sm:inline">•</span>
-                  <span>{exp.type}</span>
+                  <span className="flex items-center">
+                    <Briefcase size={14} className="mr-1.5" /> {exp.company}
+                  </span>
+                  {exp.employmentType && (
+                    <>
+                      <span className="hidden sm:inline">•</span>
+                      <span>{exp.employmentType}</span>
+                    </>
+                  )}
                 </div>
-                
+
                 <div className="flex flex-wrap items-center text-sm text-gray-400 mb-4 gap-x-4 gap-y-2">
-                  <span className="flex items-center"><Calendar size={14} className="mr-1.5" /> {exp.date}</span>
-                  <span className="flex items-center"><MapPin size={14} className="mr-1.5" /> {exp.location}</span>
+                  <span className="flex items-center">
+                    <Calendar size={14} className="mr-1.5" />
+                    {formatDate(exp.startDate)} &mdash;{" "}
+                    {exp.current ? "Present" : exp.endDate ? formatDate(exp.endDate) : "Present"}
+                  </span>
+                  {exp.location && (
+                    <span className="flex items-center">
+                      <MapPin size={14} className="mr-1.5" /> {exp.location}
+                    </span>
+                  )}
                 </div>
-                
-                <p className="text-gray-300 mb-6 leading-relaxed">
+
+                <p className="text-gray-300 mb-6 leading-relaxed whitespace-pre-line">
                   {exp.description}
                 </p>
-                
-                <div className="flex flex-wrap gap-2">
-                  {exp.tech.map(t => (
-                    <span key={t} className="px-2.5 py-1 text-xs font-medium text-gray-300 bg-black/40 rounded-md border border-white/5">
-                      {t}
-                    </span>
-                  ))}
-                </div>
+
+                {exp.technologies && exp.technologies.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {exp.technologies.map((t) => (
+                      <span
+                        key={t}
+                        className="px-2.5 py-1 text-xs font-medium text-gray-300 bg-black/40 rounded-md border border-white/5"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
-              
             </div>
           </motion.div>
         ))}

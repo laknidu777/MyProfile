@@ -24,3 +24,8 @@ Thumbs.db
 .vscode/
 .agents/
 .gemini/
+
+# Environment secrets
+.env
+.env.*
+!.env.example

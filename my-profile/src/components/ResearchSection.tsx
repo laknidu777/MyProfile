@@ -1,38 +1,55 @@
 import SectionLayout from "./SectionLayout";
-import { BookOpen, Download, ExternalLink } from "lucide-react";
+import { BookOpen, ExternalLink } from "lucide-react";
+import { Github } from "./Icons";
 import { motion } from "framer-motion";
 
-export default function ResearchSection() {
-  const publications = [
+export interface ResearchDisplayItem {
+  title: string;
+  role?: string | null; // authors
+  impact?: string | null; // venue & year
+  summary?: string;
+  description?: string;
+  technologies: string[]; // keywords
+  projectUrl?: string | null; // doiUrl / paper
+  githubUrl?: string | null;
+}
+
+interface ResearchSectionProps {
+  projects?: ResearchDisplayItem[];
+}
+
+export default function ResearchSection({ projects: dynamicProjects }: ResearchSectionProps) {
+  const fallbackPublications: ResearchDisplayItem[] = [
     {
       title: "Interactive Visualization of Quantum State Transitions in Web Environments",
-      authors: "Laknidu Thilakawardhana, Dr. Jane Smith",
-      venue: "ACM Conference on Human Factors in Computing Systems (CHI)",
-      year: "2023",
-      summary: "This paper presents a novel framework for rendering complex quantum state transitions in standard web browsers using WebGL and WebAssembly, lowering the barrier to entry for educational tools.",
-      keywords: ["Data Visualization", "WebGL", "Educational Tech"],
-      doiUrl: "#",
-      pdfUrl: "#",
-      githubUrl: "#"
+      role: "Laknidu Thilakawardhana, Dr. Jane Smith",
+      impact: "ACM Conference on Human Factors in Computing Systems (CHI) • 2023",
+      summary:
+        "This paper presents a novel framework for rendering complex quantum state transitions in standard web browsers using WebGL and WebAssembly, lowering the barrier to entry for educational tools.",
+      technologies: ["Data Visualization", "WebGL", "Educational Tech"],
+      projectUrl: "#",
+      githubUrl: "#",
     },
     {
       title: "Analyzing the Impact of Micro-Animations on User Retention in SaaS Platforms",
-      authors: "Laknidu Thilakawardhana, Alex Johnson",
-      venue: "International Symposium on User Interface Software and Technology (UIST)",
-      year: "2021",
-      summary: "An empirical study analyzing over 50,000 user sessions to determine the correlation between subtle interface animations and user engagement metrics in enterprise software.",
-      keywords: ["HCI", "UX Research", "Micro-interactions"],
-      doiUrl: "#",
-      pdfUrl: "#",
-      githubUrl: null
-    }
+      role: "Laknidu Thilakawardhana, Alex Johnson",
+      impact: "International Symposium on User Interface Software and Technology (UIST) • 2021",
+      summary:
+        "An empirical study analyzing over 50,000 user sessions to determine the correlation between subtle interface animations and user engagement metrics in enterprise software.",
+      technologies: ["HCI", "UX Research", "Micro-interactions"],
+      projectUrl: "#",
+      githubUrl: null,
+    },
   ];
+
+  const displayList =
+    dynamicProjects && dynamicProjects.length > 0 ? dynamicProjects : fallbackPublications;
 
   return (
     <SectionLayout id="research" title="Research & Publications">
       <div className="space-y-8">
-        {publications.map((pub, idx) => (
-          <motion.div 
+        {displayList.map((pub, idx) => (
+          <motion.div
             key={pub.title}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -45,43 +62,56 @@ export default function ResearchSection() {
                 <BookOpen size={24} />
               </div>
             </div>
-            
+
             <div className="flex-grow">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-2">
                 <h3 className="text-xl font-bold text-white group-hover:text-indigo-300 transition-colors">
                   {pub.title}
                 </h3>
-                <span className="px-3 py-1 bg-white/10 text-gray-300 text-sm font-medium rounded-full whitespace-nowrap self-start">
-                  {pub.year}
-                </span>
               </div>
-              
+
               <p className="text-indigo-400 text-sm font-medium mb-4">
-                {pub.authors} &bull; <span className="text-gray-400 italic">{pub.venue}</span>
+                {pub.role || "Laknidu Thilakawardhana"} &bull;{" "}
+                <span className="text-gray-400 italic">
+                  {pub.impact || "Academic Publication"}
+                </span>
               </p>
-              
+
               <p className="text-gray-300 mb-6 leading-relaxed">
-                {pub.summary}
+                {pub.summary || pub.description}
               </p>
-              
+
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex flex-wrap gap-2">
-                  {pub.keywords.map(kw => (
-                    <span key={kw} className="text-xs font-medium text-gray-400 bg-black/50 px-2 py-1 rounded">
+                  {pub.technologies.map((kw) => (
+                    <span
+                      key={kw}
+                      className="text-xs font-medium text-gray-400 bg-black/50 px-2.5 py-1 rounded-md border border-white/5"
+                    >
                       #{kw}
                     </span>
                   ))}
                 </div>
-                
+
                 <div className="flex items-center space-x-4">
-                  {pub.doiUrl && (
-                    <a href={pub.doiUrl} className="flex items-center text-sm font-medium text-gray-400 hover:text-white transition-colors">
-                      <ExternalLink size={16} className="mr-1.5" /> DOI
+                  {pub.projectUrl && (
+                    <a
+                      href={pub.projectUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+                    >
+                      <ExternalLink size={16} className="mr-1.5" /> Publication Link
                     </a>
                   )}
-                  {pub.pdfUrl && (
-                    <a href={pub.pdfUrl} className="flex items-center text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
-                      <Download size={16} className="mr-1.5" /> PDF
+                  {pub.githubUrl && (
+                    <a
+                      href={pub.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-sm font-medium text-gray-400 hover:text-white transition-colors"
+                    >
+                      <Github size={16} className="mr-1.5" /> Source
                     </a>
                   )}
                 </div>

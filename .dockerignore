@@ -27,3 +27,13 @@
 Dockerfile*
 docker-compose*.yml
 .dockerignore
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Environment secrets
+.env
+.env.*
+!.env.example

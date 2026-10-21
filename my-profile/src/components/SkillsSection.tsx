@@ -1,46 +1,65 @@
 import SectionLayout from "./SectionLayout";
-import { Code2, Database, Layout, Server, Settings, Terminal } from "lucide-react";
+import { Code2, Database, Layout, Server, Settings, Terminal, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function SkillsSection() {
-  const skillCategories = [
+export interface SkillCategoryDisplay {
+  title: string;
+  skills: string[];
+}
+
+interface SkillsSectionProps {
+  skillCategories?: SkillCategoryDisplay[];
+}
+
+function getCategoryIcon(title: string) {
+  const lower = title.toLowerCase();
+  if (lower.includes("front")) return <Layout className="text-blue-400" size={24} />;
+  if (lower.includes("back") || lower.includes("api")) return <Server className="text-green-400" size={24} />;
+  if (lower.includes("data") || lower.includes("storage")) return <Database className="text-yellow-400" size={24} />;
+  if (lower.includes("devops") || lower.includes("cloud")) return <Settings className="text-purple-400" size={24} />;
+  if (lower.includes("lang")) return <Code2 className="text-pink-400" size={24} />;
+  if (lower.includes("tool")) return <Terminal className="text-indigo-400" size={24} />;
+  return <Sparkles className="text-cyan-400" size={24} />;
+}
+
+export default function SkillsSection({ skillCategories: dynamicCategories }: SkillsSectionProps) {
+  const fallbackCategories = [
     {
       title: "Frontend Development",
-      icon: <Layout className="text-blue-400" size={24} />,
-      skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "HTML/CSS"]
+      skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "HTML/CSS"],
     },
     {
       title: "Backend Development",
-      icon: <Server className="text-green-400" size={24} />,
-      skills: ["Node.js", "Express", "Python", "RESTful APIs", "GraphQL"]
+      skills: ["Node.js", "Express", "Python", "RESTful APIs", "GraphQL"],
     },
     {
       title: "Databases & Storage",
-      icon: <Database className="text-yellow-400" size={24} />,
-      skills: ["PostgreSQL", "MongoDB", "Redis", "Firebase"]
+      skills: ["PostgreSQL", "MongoDB", "Redis", "Firebase"],
     },
     {
       title: "DevOps & Cloud",
-      icon: <Settings className="text-purple-400" size={24} />,
-      skills: ["Docker", "AWS", "Vercel", "GitHub Actions", "CI/CD"]
+      skills: ["Docker", "AWS", "Vercel", "GitHub Actions", "CI/CD"],
     },
     {
       title: "Languages",
-      icon: <Code2 className="text-pink-400" size={24} />,
-      skills: ["JavaScript", "TypeScript", "Python", "C++", "Java"]
+      skills: ["JavaScript", "TypeScript", "Python", "C++", "Java"],
     },
     {
       title: "Tools & Others",
-      icon: <Terminal className="text-indigo-400" size={24} />,
-      skills: ["Git", "Linux", "Figma", "Jest", "Webpack"]
-    }
+      skills: ["Git", "Linux", "Figma", "Jest", "Webpack"],
+    },
   ];
+
+  const categories =
+    dynamicCategories && dynamicCategories.length > 0
+      ? dynamicCategories
+      : fallbackCategories;
 
   return (
     <SectionLayout id="skills" title="Technical Skills">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {skillCategories.map((category, idx) => (
-          <motion.div 
+        {categories.map((category, idx) => (
+          <motion.div
             key={category.title}
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -49,15 +68,13 @@ export default function SkillsSection() {
             className="p-6 rounded-2xl bg-[#050505]/50 backdrop-blur-md border border-white/5 hover:bg-[#050505]/70 transition-colors"
           >
             <div className="flex items-center space-x-4 mb-6">
-              <div className="p-3 bg-white/5 rounded-lg">
-                {category.icon}
-              </div>
+              <div className="p-3 bg-white/5 rounded-lg">{getCategoryIcon(category.title)}</div>
               <h3 className="text-xl font-semibold text-white">{category.title}</h3>
             </div>
-            
+
             <div className="flex flex-wrap gap-2">
-              {category.skills.map(skill => (
-                <span 
+              {category.skills.map((skill) => (
+                <span
                   key={skill}
                   className="px-3 py-1.5 text-sm font-medium text-gray-300 bg-black/40 rounded-md border border-white/10 hover:border-white/30 hover:text-white transition-all cursor-default"
                 >
